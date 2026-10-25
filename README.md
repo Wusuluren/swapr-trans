@@ -60,12 +60,27 @@ SwaprTransSettingsView()
 
 ---
 
-## 🛠️ 构建与安装
+## 📥 下载与安装
+
+### 方式一：下载 Release 安装包（推荐）
+前往 [Releases 页面](https://github.com/linrol/swapr-trans/releases) 下载最新版本的 `SwaprTrans-x.x.x.dmg`：
+1. 打开 DMG 文件；
+2. 将 `SwaprTrans.app` 拖入 `Applications`（应用程序目录）；
+3. 首次启动：由于当前为个人签名，首次打开如遇 Gatekeeper 拦截提示，请在 Finder 中**右键点击 SwaprTrans.app -> 点击「打开」**；
+4. 授权：首次使用时请按系统提示授予 **辅助功能 (Accessibility)** 权限，以支持实时光标侦测与选区掉包替换。
+
+---
+
+## 🛠️ 本地构建与开发
 
 ```bash
-# 本地编译并安装到 /Applications
+# 1. 本地编译并就地安装至 /Applications
 ./scripts/install.sh
+
+# 2. 本地构建分发用 DMG 安装包
+./scripts/build-dmg.sh 1.0.0
 ```
 
 ## ⚖️ 许可证
 本项目基于 [MIT License](LICENSE) 开源。
+

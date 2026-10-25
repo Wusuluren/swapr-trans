@@ -400,43 +400,46 @@ body {
 }
 
 .demo-body {
-  padding: 22px;
+  padding: 24px;
   position: relative;
-  background: #fbfcfd;
-  min-height: 210px;
+  background: #ffffff;
+  min-height: 250px;
 }
 
-.demo-prompt-line {
-  font-size: 0.74rem;
-  color: #64748b;
-  margin-bottom: 10px;
+.editor-fake-toolbar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 14px;
+  margin-top: 14px;
+  color: #94a3b8;
+  opacity: 0.6;
+  font-size: 14px;
+}
+
+.editor-fake-toolbar svg {
+  width: 15px;
+  height: 15px;
 }
 
 .input-surface {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
   border-radius: var(--radius-sm);
-  padding: 16px;
-  min-height: 105px;
-  font-size: 0.98rem;
+  padding: 12px 14px;
+  min-height: 90px;
+  font-size: 1.05rem;
   line-height: 1.6;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.02);
+  color: #0f172a;
 }
 
 .text-stream {
-  color: #0f172a;
   word-break: break-word;
 }
 
 .text-selected {
-  background: #bae6fd;
-  color: #0369a1;
+  background: #6ee7b7;
+  color: #064e3b;
   border-radius: 3px;
   padding: 1px 4px;
-  box-shadow: 0 0 0 1px rgba(2, 132, 199, 0.35);
 }
 
 .text-replaced {
@@ -447,44 +450,25 @@ body {
   animation: swapGlow 0.8s ease-out;
 }
 
-@keyframes swapGlow {
-  0% { background: #bae6fd; transform: scale(1.02); }
-  50% { background: #bbf7d0; }
-  100% { background: #dcfce7; transform: scale(1); }
-}
-
-.caret {
-  display: inline-block;
-  width: 2px;
-  height: 1.15em;
-  background: #0284c7;
-  vertical-align: text-bottom;
-  animation: blink 1s step-end infinite;
-  margin-left: 2px;
-}
-
-@keyframes blink {
-  50% { opacity: 0; }
-}
-
-/* Floating SwaprTrans HUD (Luminous Frosted Glass) */
+/* Exact Real-App SwaprTrans HUD (1:1 with Screenshot) */
 .swapr-hud {
   position: absolute;
-  top: 50px;
-  left: 20px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.92);
+  top: 48px;
+  left: 28px;
+  width: 320px;
+  background: rgba(244, 245, 247, 0.88);
   backdrop-filter: blur(28px) saturate(190%);
   -webkit-backdrop-filter: blur(28px) saturate(190%);
-  border: 1px solid rgba(2, 132, 199, 0.35);
-  border-radius: var(--radius-sm);
-  padding: 14px 16px;
-  box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12), 0 0 20px rgba(2, 132, 199, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 14px;
+  padding: 12px 14px 14px;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.16), 0 2px 10px rgba(0, 0, 0, 0.06);
   opacity: 0;
   transform: translateY(6px) scale(0.98);
   transition: all 0.22s var(--ease);
   pointer-events: none;
   z-index: 10;
+  color: #1e293b;
 }
 
 .swapr-hud.is-visible {
@@ -496,63 +480,111 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 0.74rem;
   margin-bottom: 8px;
 }
 
-.hud-lang {
-  color: #0284c7;
-  font-weight: 600;
-  background: #e0f2fe;
-  padding: 2px 7px;
-  border-radius: 9999px;
+.hud-direction-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(0, 0, 0, 0.06);
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #0f172a;
 }
 
-.hud-engine {
-  color: #059669;
-  font-size: 0.72rem;
+.hud-direction-pill svg.hud-book-icon {
+  width: 12px;
+  height: 12px;
+  color: #0284c7;
+}
+
+.hud-direction-pill svg.hud-swap-arrows {
+  width: 10px;
+  height: 10px;
+  color: #64748b;
+}
+
+.hud-header-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hud-icon-btn {
+  background: transparent;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hud-provider-tag {
+  font-size: 9.5px;
+  color: #64748b;
+  background: rgba(0, 0, 0, 0.06);
+  padding: 2px 7px;
+  border-radius: 9999px;
   font-weight: 500;
 }
 
 .hud-body {
-  font-size: 0.94rem;
+  margin-top: 4px;
+  margin-bottom: 12px;
+}
+
+.hud-orig-text {
+  font-size: 11px;
+  color: #64748b;
+  line-height: 1.4;
+}
+
+.hud-divider {
+  height: 1px;
+  background: rgba(0, 0, 0, 0.07);
+  margin: 6px 0 8px;
+}
+
+.hud-trans-text {
+  font-size: 13.5px;
   font-weight: 600;
   color: #0f172a;
   line-height: 1.45;
-  margin-bottom: 10px;
 }
 
-.hud-footer {
+.hud-actions {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-top: 1px solid #e2e8f0;
-  padding-top: 8px;
-  font-size: 0.72rem;
-  color: #64748b;
+  justify-content: flex-end;
+  gap: 8px;
 }
 
-.kbd {
+.hud-btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 2px 6px;
+  gap: 5px;
   background: #ffffff;
-  border: 1px solid #cbd5e1;
-  border-bottom: 2px solid #94a3b8;
-  border-radius: 4px;
-  font-family: var(--font-mono);
-  font-size: 0.74rem;
-  color: #334155;
-  font-weight: 600;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 500;
+  color: #0f172a;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  transition: all 120ms ease;
 }
 
-.kbd.active {
-  transform: translateY(1px);
-  border-bottom-width: 1px;
+.hud-btn.active,
+.hud-btn-replace.active {
   background: #0284c7;
   color: #ffffff;
+  border-color: #0284c7;
+  box-shadow: 0 2px 6px rgba(2, 132, 199, 0.35);
+  transform: scale(0.97);
 }
 
 .demo-pills {

@@ -151,33 +151,72 @@
               </div>
             </div>
             <div class="demo-body">
-              <div class="demo-prompt-line">
-                <span data-i18n="demoPrompt">当前文本输入区（光标与焦点完好如初）</span>
-                <span>macOS 15 Sequoia</span>
-              </div>
-
               <div class="input-surface">
-                <span id="text-stream" class="text-stream"></span><span class="caret"></span>
+                <span id="text-stream" class="text-stream">我的英语不怎么好</span><span class="caret"></span>
               </div>
 
-              <!-- Floating Glassmorphism HUD -->
+              <!-- Editor bottom toolbar mimic -->
+              <div class="editor-fake-toolbar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M8 14s1.5 2 4 2 4-2 4-2"></path><line x1="9" y1="9" x2="9.01" y2="9"></line><line x1="15" y1="9" x2="15.01" y2="9"></line></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><line x1="20" y1="4" x2="8.12" y2="15.88"></line><line x1="14.47" y1="14.48" x2="20" y2="20"></line><line x1="8.12" y1="8.12" x2="12" y2="12"></line></svg>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+                <span style="font-size: 11px; margin-left: auto; color: #cbd5e1;">把想去的地方排进每天的行程...</span>
+              </div>
+
+              <!-- Real Pixel-Matched SwaprTrans HUD -->
               <div id="swapr-hud" class="swapr-hud">
                 <div class="hud-header">
-                  <span id="hud-lang-tag" class="hud-lang">🇨🇳 中文 ➔ 🇬🇧 英语</span>
-                  <span id="hud-engine-tag" class="hud-engine">⚡ Apple 神经引擎</span>
+                  <div class="hud-direction-pill">
+                    <svg class="hud-book-icon" viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path>
+                      <path d="M6 6h10M6 10h10" stroke="#fff" stroke-width="1.5"></path>
+                    </svg>
+                    <span id="hud-dir-text">ZH → EN</span>
+                    <svg class="hud-swap-arrows" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                      <path d="m7 16-4-4m0 0 4-4m-4 4h18m-4 4 4-4m0 0-4-4"></path>
+                    </svg>
+                  </div>
+
+                  <div class="hud-header-right">
+                    <button class="hud-icon-btn" type="button" title="Pronounce">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+                        <path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+                      </svg>
+                    </button>
+                    <span id="hud-provider-tag" class="hud-provider-tag">Microsoft (Edge)</span>
+                    <button class="hud-icon-btn" type="button" title="Close">
+                      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
-                <div id="hud-translation" class="hud-body">
-                  I have completed refactoring this module with substantial performance gains.
+
+                <div class="hud-body">
+                  <div id="hud-orig-text" class="hud-orig-text">我的英语不怎么好</div>
+                  <div class="hud-divider"></div>
+                  <div id="hud-trans-text" class="hud-trans-text">My English isn't very good</div>
                 </div>
-                <div class="hud-footer">
-                  <span>
-                    <kbd id="enter-kbd" class="kbd">↵ Enter</kbd>
-                    <span data-i18n="hudSwapHint">原地覆写</span>
-                  </span>
-                  <span>
-                    <kbd class="kbd">Esc</kbd>
-                    <span data-i18n="hudCloseHint">关闭</span>
-                  </span>
+
+                <div class="hud-actions">
+                  <button id="hud-replace-btn" class="hud-btn hud-btn-replace" type="button">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                      <polyline points="23 4 23 10 17 10"></polyline>
+                      <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+                    </svg>
+                    <span>Replace</span>
+                  </button>
+                  <button class="hud-btn hud-btn-copy" type="button">
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    <span>Copy</span>
+                  </button>
                 </div>
               </div>
             </div>

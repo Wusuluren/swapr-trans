@@ -23,13 +23,10 @@
 
       // Demo Box
       demoTitle: "Teams / Slack 沉浸输入体验",
-      demoPrompt: "当前文本输入区（光标与焦点完好如初）",
-      hudSwapHint: "↵ Enter 原地覆写",
-      hudCloseHint: "Esc 关闭",
-      pill1: "🏢 职场协作",
-      pill2: "💻 研发讨论",
-      pill3: "✉️ 商务邮件",
-      pill4: "🔀 英译中反向",
+      pill1: "日常对话",
+      pill2: "端侧隐私",
+      pill3: "商务往来",
+      pill4: "英译中反向",
 
       // Features
       feat1Title: " Apple 官方原生端侧模型",
@@ -77,13 +74,10 @@
 
       // Demo Box
       demoTitle: "Teams / Slack Frictionless Experience",
-      demoPrompt: "Current text input (Window focus & cursor intact)",
-      hudSwapHint: "↵ Enter In-Place Rewrite",
-      hudCloseHint: "Esc Close",
-      pill1: "🏢 Team Collab",
-      pill2: "💻 Dev Chat",
-      pill3: "✉️ Business Mail",
-      pill4: "🔀 English to Chinese",
+      pill1: "Daily Chat",
+      pill2: "On-Device",
+      pill3: "Business Mail",
+      pill4: "English to Chinese",
 
       // Features
       feat1Title: " Apple Official Native Neural Engine",
@@ -114,58 +108,66 @@
   const scenarios = [
     {
       zh: {
-        input: "这个功能模块我已经重构完毕，性能大幅提升，请协助查验代码。",
-        lang: "🇨🇳 中文 ➔ 🇬🇧 英语",
-        engine: "Apple 神经引擎",
-        trans: "I have completed refactoring this module with substantial performance gains. Please help review the code.",
+        input: "我的英语不怎么好",
+        dir: "ZH → EN",
+        provider: "Microsoft (Edge)",
+        orig: "我的英语不怎么好",
+        trans: "My English isn't very good",
       },
       en: {
-        input: "这个功能模块我已经重构完毕，性能大幅提升，请协助查验代码。",
-        lang: "🇨🇳 Chinese ➔ 🇬🇧 English",
-        engine: "Apple Neural Engine",
-        trans: "I have completed refactoring this module with substantial performance gains. Please help review the code.",
+        input: "我的英语不怎么好",
+        dir: "ZH → EN",
+        provider: "Microsoft (Edge)",
+        orig: "我的英语不怎么好",
+        trans: "My English isn't very good",
       },
     },
     {
       zh: {
-        input: "基于 Apple 神经引擎运行端侧模型，可以确保机密信息永不上云。",
-        lang: "🇨🇳 中文 ➔ 🇬🇧 英语",
-        engine: "Apple 本地端侧",
-        trans: "Running on-device models via Apple Neural Engine ensures confidential information never touches the cloud.",
+        input: "基于 Apple 神经引擎运行端侧模型，确保商业隐私安全。",
+        dir: "ZH → EN",
+        provider: "Apple (Native)",
+        orig: "基于 Apple 神经引擎运行端侧模型，确保商业隐私安全。",
+        trans: "Running on-device models via Apple Neural Engine ensures business privacy.",
       },
       en: {
-        input: "基于 Apple 神经引擎运行端侧模型，可以确保机密信息永不上云。",
-        lang: "🇨🇳 Chinese ➔ 🇬🇧 English",
-        engine: "Apple On-Device",
-        trans: "Running on-device models via Apple Neural Engine ensures confidential information never touches the cloud.",
+        input: "基于 Apple 神经引擎运行端侧模型，确保商业隐私安全。",
+        dir: "ZH → EN",
+        provider: "Apple (Native)",
+        orig: "基于 Apple 神经引擎运行端侧模型，确保商业隐私安全。",
+        trans: "Running on-device models via Apple Neural Engine ensures business privacy.",
       },
     },
     {
       zh: {
         input: "期待与贵司团队建立长期稳固的合作关系，共促业务增长。",
-        lang: "🇨🇳 中文 ➔ 🇬🇧 英语",
-        engine: "Apple 神经引擎",
-        trans: "We look forward to establishing a solid, long-term partnership with your team to drive mutual business growth.",
+        dir: "ZH → EN",
+        provider: "Apple (Native)",
+        orig: "期待与贵司团队建立长期稳固的合作关系，共促业务增长。",
+        trans: "We look forward to establishing a solid partnership with your team.",
       },
       en: {
         input: "期待与贵司团队建立长期稳固的合作关系，共促业务增长。",
-        lang: "🇨🇳 Chinese ➔ 🇬🇧 English",
-        engine: "Apple Neural Engine",
-        trans: "We look forward to establishing a solid, long-term partnership with your team to drive mutual business growth.",
+        dir: "ZH → EN",
+        provider: "Apple (Native)",
+        orig: "期待与贵司团队建立长期稳固的合作关系，共促业务增长。",
+        trans: "We look forward to establishing a solid partnership with your team.",
       },
     },
     {
       zh: {
-        input: "Could you please clarify the expected delivery timeline for this milestone?",
-        lang: "🇬🇧 英语 ➔ 🇨🇳 中文",
-        engine: "双向智能侦测",
-        trans: "请问能说明一下该里程碑预期的交付时间节点吗？",
+        input: "Could you please clarify the expected delivery timeline?",
+        dir: "EN → ZH",
+        provider: "Apple (Native)",
+        orig: "Could you please clarify the expected delivery timeline?",
+        trans: "请问能说明一下预期的交付时间节点吗？",
       },
       en: {
-        input: "Could you please clarify the expected delivery timeline for this milestone?",
-        lang: "🇬🇧 English ➔ 🇨🇳 Chinese",
-        engine: "Bidirectional Auto",
-        trans: "请问能说明一下该里程碑预期的交付时间节点吗？",
+        input: "Could you please clarify the expected delivery timeline?",
+        dir: "EN → ZH",
+        provider: "Apple (Native)",
+        orig: "Could you please clarify the expected delivery timeline?",
+        trans: "请问能说明一下预期的交付时间节点吗？",
       },
     },
   ];
@@ -174,10 +176,11 @@
   const langButtons = document.querySelectorAll("[data-set-lang]");
   const textStream = document.getElementById("text-stream");
   const swaprHud = document.getElementById("swapr-hud");
-  const hudLangTag = document.getElementById("hud-lang-tag");
-  const hudEngineTag = document.getElementById("hud-engine-tag");
-  const hudTranslation = document.getElementById("hud-translation");
-  const enterKbd = document.getElementById("enter-kbd");
+  const hudDirText = document.getElementById("hud-dir-text");
+  const hudProviderTag = document.getElementById("hud-provider-tag");
+  const hudOrigText = document.getElementById("hud-orig-text");
+  const hudTransText = document.getElementById("hud-trans-text");
+  const hudReplaceBtn = document.getElementById("hud-replace-btn");
   const demoPills = document.querySelectorAll(".demo-pill");
 
   let currentLang = localStorage.getItem("st-lang") || (navigator.language?.startsWith("zh") ? "zh" : "zh");
@@ -229,7 +232,7 @@
 
     textStream.innerHTML = "";
     swaprHud.classList.remove("is-visible");
-    enterKbd.classList.remove("active");
+    if (hudReplaceBtn) hudReplaceBtn.classList.remove("active");
 
     demoPills.forEach((pill, idx) => {
       pill.classList.toggle("active", idx === activeScenarioIndex);
@@ -244,28 +247,29 @@
 
       await sleep(350, token);
 
-      // 2. Select
+      // 2. Select text (with real mint green selection)
       textStream.innerHTML = `<span class="text-selected">${data.input}</span>`;
       await sleep(300, token);
 
-      // 3. HUD floats
-      hudLangTag.textContent = data.lang;
-      hudEngineTag.textContent = `⚡ ${data.engine}`;
-      hudTranslation.textContent = data.trans;
+      // 3. Float SwaprTrans HUD
+      if (hudDirText) hudDirText.textContent = data.dir;
+      if (hudProviderTag) hudProviderTag.textContent = data.provider;
+      if (hudOrigText) hudOrigText.textContent = data.orig;
+      if (hudTransText) hudTransText.textContent = data.trans;
       swaprHud.classList.add("is-visible");
 
-      await sleep(1300, token);
+      await sleep(1400, token);
 
-      // 4. Press Enter
-      enterKbd.classList.add("active");
-      await sleep(220, token);
-      enterKbd.classList.remove("active");
+      // 4. Trigger Replace (Click / Enter effect)
+      if (hudReplaceBtn) hudReplaceBtn.classList.add("active");
+      await sleep(200, token);
+      if (hudReplaceBtn) hudReplaceBtn.classList.remove("active");
 
       // 5. In-Place Rewrite
       swaprHud.classList.remove("is-visible");
       textStream.innerHTML = `<span class="text-replaced">${data.trans}</span>`;
 
-      // 6. Pause
+      // 6. Pause to appreciate
       await sleep(3400, token);
 
       // 7. Next loop

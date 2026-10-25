@@ -310,7 +310,7 @@ public final class TranslationHudController: NSObject {
         let delay = Double(SwaprTransConfig.shared.autoDismissSeconds)
         if delay > 0 {
             dismissTimer = Timer.scheduledTimer(withTimeInterval: delay, repeats: false) { [weak self] _ in
-                Task { @MainActor in
+                Task { @MainActor [weak self] in
                     self?.hide()
                 }
             }

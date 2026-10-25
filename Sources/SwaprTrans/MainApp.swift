@@ -6,6 +6,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
         // Run as an accessory app: no Dock icon, stays in the menu bar
         NSApp.setActivationPolicy(.accessory)
+        ProcessInfo.processInfo.disableAutomaticTermination("SwaprTrans MenuBar Daemon")
+        ProcessInfo.processInfo.disableSuddenTermination()
     }
 }
 

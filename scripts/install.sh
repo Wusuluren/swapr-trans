@@ -71,6 +71,10 @@ cat <<INFOEOF > "$CONTENTS_DIR/Info.plist"
     <true/>
     <key>NSHighResolutionCapable</key>
     <true/>
+    <key>NSSupportsAutomaticTermination</key>
+    <false/>
+    <key>NSSupportsSuddenTermination</key>
+    <false/>
 </dict>
 </plist>
 INFOEOF
@@ -80,7 +84,10 @@ xattr -cr "$APP_DEST"
 
 # 5. Code signing
 echo "Signing /Applications/SwaprTrans.app..."
-if security find-identity -v -p codesigning | grep -q "Apple Development"; then
+if security find-identity -v -p codesigning | grep -q "Teams Wake Dev"; then
+    echo "Found signing identity: Teams Wake Dev"
+    codesign --force --deep --sign "Teams Wake Dev" "$APP_DEST"
+elif security find-identity -v -p codesigning | grep -q "Apple Development"; then
     IDENTITY=$(security find-identity -v -p codesigning | grep "Apple Development" | head -n 1 | awk -F '"' '{print $2}')
     echo "Found signing identity: $IDENTITY"
     codesign --force --deep --sign "$IDENTITY" "$APP_DEST"
@@ -93,4 +100,7 @@ xattr -cr "$APP_DEST"
 
 echo "=========================================="
 echo "  🎉 Installed to /Applications/SwaprTrans.app"
+echo "  🚀 Launching..."
 echo "=========================================="
+
+open "$APP_DEST"

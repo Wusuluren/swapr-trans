@@ -21,8 +21,11 @@ public final class SwaprTransConfig: ObservableObject {
     private let keyDismissSeconds = "swapr_trans_dismiss_seconds"
     private let keyHudOpacity = "swapr_trans_hud_opacity"
 
+    private var isInitialized = false
+
     @Published public var isEnabled: Bool = false {
         didSet {
+            guard isInitialized else { return }
             defaults.set(isEnabled, forKey: keyEnabled)
             handleStateChanged()
         }
@@ -30,6 +33,7 @@ public final class SwaprTransConfig: ObservableObject {
 
     @Published public var provider: TranslationProvider = .apple {
         didSet {
+            guard isInitialized else { return }
             defaults.set(provider.rawValue, forKey: keyProvider)
             log("Translation provider changed to: \(provider.displayName)", level: .info)
         }
@@ -37,6 +41,7 @@ public final class SwaprTransConfig: ObservableObject {
 
     @Published public var shortcut: TranslationShortcut = .defaultShortcut {
         didSet {
+            guard isInitialized else { return }
             if let data = try? JSONEncoder().encode(shortcut) {
                 defaults.set(data, forKey: keyShortcut)
             }
@@ -49,12 +54,14 @@ public final class SwaprTransConfig: ObservableObject {
 
     @Published public var autoDismissSeconds: Int = 0 {
         didSet {
+            guard isInitialized else { return }
             defaults.set(autoDismissSeconds, forKey: keyDismissSeconds)
         }
     }
 
     @Published public var hudOpacity: Double = 0.85 {
         didSet {
+            guard isInitialized else { return }
             defaults.set(hudOpacity, forKey: keyHudOpacity)
             TranslationHudController.shared.updateOpacity(hudOpacity)
         }
@@ -99,6 +106,7 @@ public final class SwaprTransConfig: ObservableObject {
         self.hudOpacity = defaults.object(forKey: keyHudOpacity) != nil ? savedOpacity : 0.85
 
         checkPermission()
+        self.isInitialized = true
 
         DispatchQueue.main.async { [weak self] in
             guard let self = self else { return }

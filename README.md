@@ -1,0 +1,71 @@
+# SwaprTrans ⚡
+
+[![Platform](https://img.shields.io/badge/platform-macOS%2014.2%2B-lightgrey.svg)](https://www.apple.com/macos/)
+[![Language](https://img.shields.io/badge/language-Swift%206-orange.svg)](https://swift.org)
+[![Framework](https://img.shields.io/badge/framework-AppKit%20%7C%20SwiftUI-blue.svg)](https://developer.apple.com/xcode/swiftui/)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+
+**SwaprTrans** 是一款专为 macOS 设计的极致轻量、纯原生的**全局划词翻译与原位覆写工具**。
+彻底打破“划词 -> 复制 -> 切换窗口 -> 粘贴 -> 翻译 -> 再复制回来”的传统低效链条。
+
+> **🚀 选词，回车，原地掉包！**  
+> 在任意聊天框（Teams、Slack、微信、邮件、终端）中敲好文字，划选并按下快捷键，轻轻敲一下 **`Enter` 回车键**，原文即可平滑蜕变为地道外文！
+
+---
+
+## ✨ 核心特性
+
+- ** Apple 官方原生端侧模型（macOS 15+ 深度集成）**：
+  - **端侧芯片推理·无需联网**：基于 Apple 官方 `Translation.framework` 原生神经引擎驱动，零网络依赖；
+  - **100% 隐私安全**：商业机密沟通不上云，纯本地芯片运算；
+- **三引擎智能协同与容灾**：
+  - **Apple (Native)**：系统级原生端侧引擎；
+  - **Microsoft Edge**：免 Key 专线极速互译通道；
+  - **Google Translate**：多链路自动降级兜底；
+- **双向智能语种识别**：中英混合输入自动侦测，中文自动转英文、外文自动转中文；
+- **绝不夺取系统焦点的毛玻璃浮窗**：浮窗浮起时，当前编辑窗口的光标与选区完好如初；
+- **纯原生零负载**：纯 Swift + SwiftUI + AppKit 重构，内存仅微量常驻，体积不足 1MB。
+
+---
+
+## 📦 作为 Swift Package (SPM) 库引用
+
+`SwaprTrans` 不仅是一个独立的 macOS 菜单栏应用，它的核心能力以 `SwaprTransKit` 完整对外开放。你可以在其他 macOS 应用程序中直接引入：
+
+```swift
+// Package.swift
+dependencies: [
+    .package(url: "https://gitee.com/linrol/swapr-trans.git", from: "1.0.0")
+],
+targets: [
+    .target(
+        name: "YourApp",
+        dependencies: [
+            .product(name: "SwaprTransKit", package: "swapr-trans")
+        ]
+    )
+]
+```
+
+在你的 App 中直接调用与嵌入：
+```swift
+import SwaprTransKit
+
+// 启动服务
+SwaprTransConfig.shared.isEnabled = true
+
+// 在 SwiftUI 菜单或设置窗口中直接嵌入开箱即用的设置面板
+SwaprTransSettingsView()
+```
+
+---
+
+## 🛠️ 构建与安装
+
+```bash
+# 本地编译并安装到 /Applications
+./scripts/install.sh
+```
+
+## ⚖️ 许可证
+本项目基于 [MIT License](LICENSE) 开源。

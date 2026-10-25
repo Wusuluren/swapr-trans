@@ -10,7 +10,7 @@ struct StandaloneMenuBarPopup: View {
             // Header
             HStack {
                 HStack(spacing: 6) {
-                    Image(systemName: "character.book.closed.fill")
+                    Image(systemName: "translate")
                         .foregroundColor(.accentColor)
                         .font(.system(size: 14, weight: .bold))
                     Text("SwaprTrans")

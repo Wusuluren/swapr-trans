@@ -21,11 +21,11 @@ struct SwaprTransApp: App {
             StandaloneMenuBarPopup()
         } label: {
             if config.isEnabled && config.hasAccessibilityPermission {
-                Image(systemName: "character.book.closed.fill")
-                    .symbolRenderingMode(.palette)
-                    .foregroundStyle(Color.white, Color.cyan)
+                Image(systemName: "translate")
             } else {
-                Image(systemName: "character.book.closed")
+                Image(systemName: "translate")
+                    .symbolRenderingMode(.palette)
+                    .foregroundStyle(.secondary)
             }
         }
         .menuBarExtraStyle(.window)

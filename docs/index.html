@@ -5,16 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta
       name="description"
-      content="SwaprTrans · macOS 全局划词即时翻译与原位掉包覆写工具。基于 Apple 官方原生端侧模型，零网络依赖，100% 隐私安全，回车瞬间原地替换。"
+      content="SwaprTrans · macOS 极简原生选词瞬译与原地覆写工具。基于 Apple 官方原生端侧模型，零网络依赖，100% 隐私安全，回车瞬间原地替换。"
     />
-    <meta name="theme-color" content="#07090e" />
-    <meta property="og:title" content="SwaprTrans · 选词即翻，回车原位掉包" />
+    <meta name="theme-color" content="#090b10" />
+    <meta property="og:title" content="SwaprTrans · 选词即翻，回车原地覆写" />
     <meta
       property="og:description"
-      content="macOS 全局划词即时翻译与原位掉包覆写工具。基于 Apple 官方端侧神经引擎，回车瞬间原子级替换原文。"
+      content="macOS 极简原生选词瞬译与原地覆写工具。基于 Apple 官方端侧神经引擎，回车瞬间原子级替换原文。"
     />
     <meta property="og:image" content="assets/app-icon.png" />
-    <title>SwaprTrans · 选词即翻，回车原位掉包</title>
+    <title>SwaprTrans · 选词即翻，回车原地覆写</title>
     <link rel="icon" type="image/png" href="assets/favicon.png" />
     <link rel="apple-touch-icon" href="assets/app-icon.png" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -26,514 +26,279 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <a class="skip-link" href="#main" data-i18n="skip">跳转到主要内容</a>
-
     <div class="ambient" aria-hidden="true">
       <div class="blob blob-a"></div>
       <div class="blob blob-b"></div>
-      <div class="blob blob-c"></div>
     </div>
 
-    <!-- Header -->
-    <header class="site-header">
-      <div class="container header-inner">
+    <!-- Floating Pill Navbar -->
+    <header class="nav-wrap">
+      <nav class="nav-pill" aria-label="Main Navigation">
         <a class="brand" href="#top" aria-label="SwaprTrans">
-          <img src="assets/app-icon.svg" width="36" height="36" alt="SwaprTrans Logo" />
+          <img src="assets/app-icon.svg" width="28" height="28" alt="Logo" />
           <span class="brand-text">
-            <strong>SwaprTrans</strong>
-            <span data-i18n="brandSubtitle">原位掉包翻译</span>
+            <span class="brand-title">SwaprTrans</span>
+            <span class="brand-badge" data-i18n="brandBadge">原地瞬译</span>
           </span>
         </a>
 
-        <nav class="nav" aria-label="Primary Navigation">
-          <a href="#demo" data-i18n="navDemo">实时演示</a>
-          <a href="#workflow" data-i18n="navWorkflow">工作流</a>
-          <a href="#features" data-i18n="navFeatures">核心特性</a>
-          <a href="#privacy" data-i18n="navPrivacy">隐私安全</a>
-          <a href="#sdk" data-i18n="navSdk">开发库</a>
-          <a href="#install" data-i18n="navInstall">下载安装</a>
-        </nav>
+        <div class="nav-links">
+          <a href="#features" data-i18n="navFeatures">特性</a>
+          <a href="#install" data-i18n="navInstall">安装</a>
+          <a href="https://github.com/linrol/swapr-trans" target="_blank" rel="noopener noreferrer" data-i18n="navSdk">GitHub / SPM</a>
+        </div>
 
-        <div class="header-actions">
+        <div class="nav-actions">
           <div class="lang-switch" role="group" aria-label="Language">
-            <button type="button" data-set-lang="zh" aria-pressed="true">中文</button>
+            <button type="button" data-set-lang="zh" aria-pressed="true">中</button>
             <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
           </div>
+
           <a
-            class="btn btn-primary btn-compact"
+            class="btn btn-primary"
             href="https://github.com/linrol/swapr-trans/releases/download/v1.0.0/SwaprTrans-1.0.0.dmg"
           >
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"
-              />
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14" />
             </svg>
             <span data-i18n="ctaDownload">下载 DMG</span>
           </a>
+
           <a
-            class="btn btn-ghost"
+            class="btn btn-icon"
             href="https://github.com/linrol/swapr-trans"
             target="_blank"
             rel="noopener noreferrer"
-            aria-label="GitHub Repository"
+            aria-label="GitHub"
           >
-            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-              <path
-                fill="currentColor"
-                d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.523 2 12 2z"
-              />
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0 1 12 6.844a9.59 9.59 0 0 1 2.504.337c1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.02 10.02 0 0 0 22 12.017C22 6.484 17.523 2 12 2z" />
             </svg>
-            <span data-i18n="navGitHub">GitHub</span>
           </a>
         </div>
-      </div>
+      </nav>
     </header>
 
     <main id="main">
       <!-- Hero Section -->
       <section id="top" class="hero">
-        <div class="container hero-grid">
-          <div class="hero-copy">
-            <p class="eyebrow">
-              <span class="dot" aria-hidden="true"></span>
-              <span data-i18n="eyebrow">macOS 15+ 端侧原生驱动 · 全局划词即时翻译与原地掉包</span>
-            </p>
-            <h1>
-              <span data-i18n="heroTitle1">选词即翻</span><br />
-              <span class="accent" data-i18n="heroTitle2">回车原位掉包</span>
-            </h1>
-            <p class="lede hero-lede" data-i18n="heroLede">
-              彻底打破“划选 → 复制 → 切换窗口 → 粘贴 → 翻译 → 复制回来”的传统割裂链路。在任意聊天框（Teams、Slack、微信、邮件、终端）中划选文字并按下快捷键，轻敲一次回车键，原文即刻原地蜕变为地道外文！
-            </p>
-            <div class="hero-cta">
-              <a
-                class="btn btn-primary"
-                href="https://github.com/linrol/swapr-trans/releases/download/v1.0.0/SwaprTrans-1.0.0.dmg"
-              >
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"
-                  />
-                </svg>
-                <span data-i18n="ctaPrimary">下载 SwaprTrans v1.0.0 (DMG)</span>
-              </a>
-              <a
-                class="btn btn-secondary"
-                href="https://github.com/linrol/swapr-trans"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <span data-i18n="ctaSecondary">查看源码仓库</span>
-              </a>
-            </div>
-            <div class="hero-badges">
-              <span>
-                <svg class="icon" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                </svg>
-                <span data-i18n="badgeApple">Apple 官方神经引擎</span>
-              </span>
-              <span>
-                <svg class="icon" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                </svg>
-                <span data-i18n="badgePrivacy">100% 隐私·不上云</span>
-              </span>
-              <span>
-                <svg class="icon" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                </svg>
-                <span data-i18n="badgeFailover">三引擎智能容灾</span>
-              </span>
-              <span>
-                <svg class="icon" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-                </svg>
-                <span data-i18n="badgeLightweight">极致轻量 &lt; 2MB</span>
-              </span>
-            </div>
+        <div class="container">
+          <div class="eyebrow-pill">
+            <span class="dot"></span>
+            <span data-i18n="eyebrow">macOS 15+ 官方端侧驱动 · 选词瞬译</span>
           </div>
 
-          <!-- Interactive Live Demo Stage -->
-          <div id="demo" class="stage">
-            <div class="mac-window">
-              <div class="mac-header">
-                <div class="mac-dots">
-                  <span class="mac-dot close"></span>
-                  <span class="mac-dot min"></span>
-                  <span class="mac-dot max"></span>
-                </div>
-                <div class="mac-title">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-                  </svg>
-                  <span data-i18n="demoHeaderTitle">Teams / Slack 原地沟通体验</span>
-                </div>
+          <h1>
+            <span data-i18n="heroTitle1">选词即翻，</span><br />
+            <span class="gradient" data-i18n="heroTitle2">回车原地覆写。</span>
+          </h1>
+
+          <p class="hero-sub" data-i18n="heroSub">
+            彻底告别切屏复制与反复粘贴。在任意输入框中划选文字，按下快捷键，轻敲一次回车键，原文即刻原子级蜕变为地道外文。
+          </p>
+
+          <div class="hero-actions">
+            <a
+              class="btn btn-primary"
+              href="https://github.com/linrol/swapr-trans/releases/download/v1.0.0/SwaprTrans-1.0.0.dmg"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14" />
+              </svg>
+              <span data-i18n="ctaDownloadHero">下载 SwaprTrans v1.0.0 (DMG)</span>
+            </a>
+            <a
+              class="btn btn-secondary"
+              href="https://github.com/linrol/swapr-trans"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub
+            </a>
+          </div>
+
+          <div class="hero-meta">
+            <span>
+              <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              <span data-i18n="metaChip"> Apple 原生神经引擎</span>
+            </span>
+            <span>
+              <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              <span data-i18n="metaPrivacy">100% 隐私·不上云</span>
+            </span>
+            <span>
+              <svg width="14" height="14" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+              <span data-i18n="metaWeight">轻量 &lt; 2MB</span>
+            </span>
+          </div>
+
+          <!-- Interactive macOS Live Demo Box -->
+          <div class="demo-card">
+            <div class="demo-bar">
+              <div class="demo-dots">
+                <span class="demo-dot red"></span>
+                <span class="demo-dot yellow"></span>
+                <span class="demo-dot green"></span>
               </div>
-              <div class="mac-body">
-                <div class="chat-context">
-                  <span class="chat-user-badge">
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <circle cx="12" cy="7" r="4"></circle>
-                      <path d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"></path>
-                    </svg>
-                    Direct Message · Engineering Team
+              <div class="demo-title">
+                <span data-i18n="demoTitle">Teams / Slack 沉浸输入体验</span>
+              </div>
+            </div>
+            <div class="demo-body">
+              <div class="demo-prompt-line">
+                <span data-i18n="demoPrompt">当前文本输入区（光标与焦点完好如初）</span>
+                <span>macOS 15 Sequoia</span>
+              </div>
+
+              <div class="input-surface">
+                <span id="text-stream" class="text-stream"></span><span class="caret"></span>
+              </div>
+
+              <!-- Floating Glassmorphism HUD -->
+              <div id="swapr-hud" class="swapr-hud">
+                <div class="hud-header">
+                  <span id="hud-lang-tag" class="hud-lang">🇨🇳 中文 ➔ 🇬🇧 英语</span>
+                  <span id="hud-engine-tag" class="hud-engine">⚡ Apple 神经引擎</span>
+                </div>
+                <div id="hud-translation" class="hud-body">
+                  I have completed refactoring this module with substantial performance gains.
+                </div>
+                <div class="hud-footer">
+                  <span>
+                    <kbd id="enter-kbd" class="kbd">↵ Enter</kbd>
+                    <span data-i18n="hudSwapHint">原地覆写</span>
                   </span>
-                  <span>macOS 15.0</span>
-                </div>
-
-                <div class="chat-input-area">
-                  <div class="chat-input-label" data-i18n="demoInputLabel">当前输入区（无需切换焦点）</div>
-                  <div class="input-text-wrapper">
-                    <span id="text-stream" class="text-stream"></span><span class="caret"></span>
-                  </div>
-                </div>
-
-                <!-- SwaprTrans Glassmorphism HUD -->
-                <div id="swapr-hud" class="swapr-hud">
-                  <div class="hud-top">
-                    <span id="hud-lang-tag" class="hud-lang-tag">🇨🇳 中文 ➔ 🇬🇧 英语</span>
-                    <span id="hud-engine-tag" class="hud-engine-tag">⚡ Apple 神经引擎</span>
-                  </div>
-                  <div id="hud-translation" class="hud-translation">
-                    This architecture design performed exceptionally well in benchmark tests.
-                  </div>
-                  <div class="hud-footer">
-                    <span>
-                      <kbd id="enter-kbd" class="kbd">↵ Enter</kbd>
-                      <span data-i18n="hudHintSwap">原地替换</span>
-                    </span>
-                    <span>
-                      <kbd class="kbd">Esc</kbd>
-                      <span data-i18n="hudHintClose">关闭</span>
-                    </span>
-                  </div>
+                  <span>
+                    <kbd class="kbd">Esc</kbd>
+                    <span data-i18n="hudCloseHint">关闭</span>
+                  </span>
                 </div>
               </div>
             </div>
+          </div>
 
-            <!-- Scenario Selection Pills -->
-            <div class="stage-pills">
-              <button type="button" class="stage-pill active" data-i18n="demoPill1">🏢 职场协作</button>
-              <button type="button" class="stage-pill" data-i18n="demoPill2">💻 技术开发</button>
-              <button type="button" class="stage-pill" data-i18n="demoPill3">✉️ 商务沟通</button>
-              <button type="button" class="stage-pill" data-i18n="demoPill4">🔀 英译中反向</button>
-            </div>
+          <!-- Interactive Pills -->
+          <div class="demo-pills">
+            <button type="button" class="demo-pill active" data-i18n="pill1">🏢 职场协作</button>
+            <button type="button" class="demo-pill" data-i18n="pill2">💻 研发讨论</button>
+            <button type="button" class="demo-pill" data-i18n="pill3">✉️ 商务邮件</button>
+            <button type="button" class="demo-pill" data-i18n="pill4">🔀 英译中反向</button>
           </div>
         </div>
       </section>
 
-      <!-- Workflow Section (三步闭环) -->
-      <section id="workflow" class="section">
+      <!-- Compact Bento Grid Features -->
+      <section id="features" class="features-section">
         <div class="container">
-          <div class="section-head">
-            <p class="eyebrow" data-i18n="workflowEyebrow">三步闭环</p>
-            <h2 data-i18n="workflowTitle">极简原位蜕变，全程无感打扰</h2>
-            <p class="desc" data-i18n="workflowDesc">无需窗口切换，无需复杂操作，专为高频打字与高专注度工作流设计。</p>
-          </div>
-          <div class="steps-grid">
-            <div class="step-card">
-              <span class="step-num">01</span>
-              <h3 data-i18n="step1Title">1. 划选文本与全局唤起</h3>
-              <p data-i18n="step1Body">在任意支持光标选区的文本框（聊天软件、浏览器、IDE、邮件）中划选文字，触发全局快捷键。</p>
-            </div>
-            <div class="step-card">
-              <span class="step-num">02</span>
-              <h3 data-i18n="step2Title">2. 离线神经模型毫秒直达</h3>
-              <p data-i18n="step2Body">基于 Apple 官方 Translation.framework 端侧芯片秒级推理，辅以 Edge 与 Google 双通道多级容灾。</p>
-            </div>
-            <div class="step-card">
-              <span class="step-num">03</span>
-              <h3 data-i18n="step3Title">3. 轻敲 Enter，原文掉包蜕变</h3>
-              <p data-i18n="step3Body">无需移动光标，无需复制粘贴，轻敲一下 Enter 回车键，原文瞬间平滑蜕变为高水准译文。</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Features (Bento Grid) -->
-      <section id="features" class="section section-alt">
-        <div class="container">
-          <div class="section-head">
-            <p class="eyebrow" data-i18n="featuresEyebrow">核心特性</p>
-            <h2 data-i18n="featuresTitle">为专业工作者打造的高性能生产力工具</h2>
-            <p class="desc" data-i18n="featuresDesc">纯 Swift 原生架构，极速响应，安全私密，开箱即用。</p>
-          </div>
-          <div class="bento">
-            <article class="card card-wide">
-              <div class="card-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <div class="bento-grid">
+            <div class="bento-card">
+              <div class="bento-card-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                 </svg>
               </div>
               <h3 data-i18n="feat1Title"> Apple 官方原生端侧模型</h3>
-              <p data-i18n="feat1Body">
-                深度集成 macOS 15+ 官方系统级 Translation.framework 原生神经引擎驱动。纯芯片本地离线运算，完全零网络依赖，商业机密与私密沟通 100% 隐私安全。
+              <p data-i18n="feat1Desc">
+                深度集成 macOS 15+ Translation.framework。纯芯片本地神经引擎离线运算，零网络依赖，商业机密与私密沟通 100% 安全。
               </p>
-            </article>
+            </div>
 
-            <article class="card">
-              <div class="card-icon purple">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M3 3m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
-                  <path d="M15 15m0 1a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v4a1 1 0 0 1 -1 1h-4a1 1 0 0 1 -1 -1z" />
-                  <path d="M21 11v-3a2 2 0 0 0 -2 -2h-6l3 3m0 -6l-3 3" />
-                  <path d="M3 13v3a2 2 0 0 0 2 2h6l-3 -3m0 6l3 -3" />
+            <div class="bento-card">
+              <div class="bento-card-icon purple">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/>
                 </svg>
               </div>
-              <h3 data-i18n="feat2Title">独创「原位掉包」交互</h3>
-              <p data-i18n="feat2Body">
-                彻底消灭划词后的多余鼠标拖动与粘贴动作。浮窗浮起后，轻触 Enter 键即由 SwaprTrans 自动完成原位覆写，行云流水。
+              <h3 data-i18n="feat2Title">⚡️ 回车瞬间「原地覆写」</h3>
+              <p data-i18n="feat2Desc">
+                消灭多余的鼠标操作与复制粘贴。浮窗浮起后轻触 Enter 回车，原文直接替换为地道译文，光标位置平滑保持。
               </p>
-            </article>
+            </div>
 
-            <article class="card">
-              <div class="card-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
-                  <line x1="9" y1="3" x2="9" y2="21"/>
-                </svg>
-              </div>
-              <h3 data-i18n="feat3Title">绝不抢焦点的毛玻璃浮窗</h3>
-              <p data-i18n="feat3Body">
-                浮窗浮起时光标与选区完好如初，不打断键盘输入节奏，支持深浅色自适应与自动消失倒计时。
-              </p>
-            </article>
-
-            <article class="card">
-              <div class="card-icon emerald">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <div class="bento-card">
+              <div class="bento-card-icon emerald">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
                 </svg>
               </div>
-              <h3 data-i18n="feat4Title">三引擎智能协同与容灾降级</h3>
-              <p data-i18n="feat4Body">
-                默认使用 Apple Native 离线端侧引擎；网络环境下支持 Microsoft Edge 极速免 Key 通道与 Google Translate 多链路自动平滑兜底。
+              <h3 data-i18n="feat3Title">🌐 三引擎智能容灾与自适应</h3>
+              <p data-i18n="feat3Desc">
+                默认 Apple 本地端侧推理；辅以 Microsoft Edge 极速免 Key 通道与 Google Translate 自动无感平滑兜底。
               </p>
-            </article>
+            </div>
 
-            <article class="card">
-              <div class="card-icon purple">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <line x1="2" y1="12" x2="22" y2="12"></line>
-                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                </svg>
-              </div>
-              <h3 data-i18n="feat5Title">双向智能语种识别</h3>
-              <p data-i18n="feat5Body">
-                中英混合或任意语种自适应识别，中文自动转化为地道英文，外文自动转化为精准中文，无需频繁手动切换语向。
-              </p>
-            </article>
-
-            <article class="card card-wide">
-              <div class="card-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <div class="bento-card">
+              <div class="bento-card-icon">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <polyline points="16 18 22 12 16 6"></polyline>
                   <polyline points="8 6 2 12 8 18"></polyline>
                 </svg>
               </div>
-              <h3 data-i18n="feat6Title">完全开源的 SwaprTransKit 模块库</h3>
-              <p data-i18n="feat6Body">
-                不仅是一款独立的菜单栏应用，更以 Swift Package (SPM) 库完整开放。只需在 Package.swift 中引入依赖，即可在你的 macOS 应用中直接调用设置面板与翻译服务。
+              <h3 data-i18n="feat4Title">🪟 焦点无损与开源 SwaprTransKit</h3>
+              <p data-i18n="feat4Desc">
+                纯 Swift 原生打造，常驻内存微量。浮窗绝不夺取焦点；核心 SwaprTransKit 作为 Swift Package 完全开源开放。
               </p>
-              <div class="code-snippet">
-                dependencies: [ .package(url: "https://github.com/linrol/swapr-trans.git", from: "1.0.0") ]
-              </div>
-            </article>
-          </div>
-        </div>
-      </section>
-
-      <!-- Privacy Section -->
-      <section id="privacy" class="section">
-        <div class="container privacy-grid">
-          <div>
-            <p class="eyebrow" data-i18n="privacyEyebrow">隐私承诺</p>
-            <h2 data-i18n="privacyTitle">本地端侧优先，数据永不上云</h2>
-            <p class="desc hero-lede" data-i18n="privacyBody">
-              SwaprTrans 坚守纯粹的开源与隐私理念。我们不收集任何个人数据，代码完全透明可审计。
-            </p>
-          </div>
-          <ul class="privacy-list">
-            <li class="privacy-item">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-              </svg>
-              <div>
-                <strong data-i18n="priv1Title">本地端侧神经运算</strong>
-                <span data-i18n="priv1Desc">默认使用 Apple Native 神经引擎，翻译运算全程在本地芯片完成，不产生任何外发请求。</span>
-              </div>
-            </li>
-            <li class="privacy-item">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-              </svg>
-              <div>
-                <strong data-i18n="priv2Title">绝不收集与上传输入文本</strong>
-                <span data-i18n="priv2Desc">没有后台分析服务，没有遥测代码，不收集任何用户输入内容与应用使用习惯。</span>
-              </div>
-            </li>
-            <li class="privacy-item">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-              </svg>
-              <div>
-                <strong data-i18n="priv3Title">密码框与隐私跳过</strong>
-                <span data-i18n="priv3Desc">检测到安全输入框或密码字段时自动规避，杜绝敏感凭据泄露风险。</span>
-              </div>
-            </li>
-            <li class="privacy-item">
-              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-              </svg>
-              <div>
-                <strong data-i18n="priv4Title">100% 开源透明</strong>
-                <span data-i18n="priv4Desc">所有源代码在 GitHub 开源，构建脚本全公开，任何人均可自由审查与本地编译。</span>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <!-- SPM SDK Section -->
-      <section id="sdk" class="section section-alt">
-        <div class="container">
-          <div class="section-head">
-            <p class="eyebrow" data-i18n="sdkEyebrow">开发者集成</p>
-            <h2 data-i18n="sdkTitle">通过 Swift Package Manager 接入</h2>
-            <p class="desc" data-i18n="sdkDesc">将 SwaprTransKit 作为依赖引入到你自己的 macOS App 中：</p>
-          </div>
-          <div class="card" style="max-width: 800px; margin: 0 auto; background: #0c121e;">
-            <pre style="margin: 0; font-family: var(--font-mono); font-size: 0.9rem; color: #cbd5e1; overflow-x: auto;"><code>// Package.swift
-dependencies: [
-    .package(url: "https://github.com/linrol/swapr-trans.git", from: "1.0.0")
-],
-targets: [
-    .target(
-        name: "YourAwesomeApp",
-        dependencies: [
-            .product(name: "SwaprTransKit", package: "swapr-trans")
-        ]
-    )
-]</code></pre>
-            <div style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 16px;">
-              <pre style="margin: 0; font-family: var(--font-mono); font-size: 0.9rem; color: #93c5fd; overflow-x: auto;"><code>import SwaprTransKit
-
-// 启动原位掉包快捷监控服务
-SwaprTransConfig.shared.isEnabled = true
-
-// 在你的 SwiftUI 视图或设置面板中直接嵌入
-SwaprTransSettingsView()</code></pre>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- Install Section -->
-      <section id="install" class="section">
+      <!-- Compact Installation & Setup -->
+      <section id="install" class="install-section">
         <div class="container">
-          <div class="section-head">
-            <p class="eyebrow" data-i18n="installEyebrow">安装使用</p>
-            <h2 data-i18n="installTitle">快速安装与配置</h2>
-          </div>
+          <div class="install-box">
+            <div>
+              <h2 style="font-size: 1.3rem; margin: 0 0 16px;" data-i18n="installTitle">快速安装与授权</h2>
+              <ul class="install-steps">
+                <li class="install-step">
+                  <span class="install-step-num">01</span>
+                  <span data-i18n="installStep1" data-html="true">下载 <strong>SwaprTrans-1.0.0.dmg</strong> 并将 App 拖拽至 <strong>Applications</strong>；</span>
+                </li>
+                <li class="install-step">
+                  <span class="install-step-num">02</span>
+                  <span data-i18n="installStep2" data-html="true">首次打开：若遇 Gatekeeper 提示，在访达中<strong>右键点击 App → 点击「打开」</strong>；</span>
+                </li>
+                <li class="install-step">
+                  <span class="install-step-num">03</span>
+                  <span data-i18n="installStep3" data-html="true">按系统提示授予<strong>「辅助功能」(Accessibility)</strong> 权限，即刻开启选词原地覆写体验。</span>
+                </li>
+              </ul>
+            </div>
 
-          <div class="install-tabs">
-            <button type="button" class="install-tab-btn active" data-tab="tab-dmg" data-i18n="tabDmg">
-              DMG 安装包（推荐）
-            </button>
-            <button type="button" class="install-tab-btn" data-tab="tab-source" data-i18n="tabSource">
-              从源码编译安装
-            </button>
-          </div>
-
-          <!-- DMG Panel -->
-          <div id="tab-dmg" class="install-panel active">
-            <ul class="install-step-list">
-              <li>
-                <span class="install-badge">01</span>
-                <span data-i18n="dmgStep1" data-html="true">
-                  下载最新版本的 <strong>SwaprTrans-1.0.0.dmg</strong> 安装包；
-                </span>
-              </li>
-              <li>
-                <span class="install-badge">02</span>
-                <span data-i18n="dmgStep2" data-html="true">
-                  双击打开 DMG 文件，将 <strong>SwaprTrans.app</strong> 拖拽至 <strong>Applications</strong> 应用程序文件夹；
-                </span>
-              </li>
-              <li>
-                <span class="install-badge">03</span>
-                <span data-i18n="dmgStep3" data-html="true">
-                  首次打开：由于当前采用个人 Ad-hoc 签名，若遇系统拦截提示，请在 Finder 中<strong>右键点击 SwaprTrans.app → 点击「打开」</strong>；
-                </span>
-              </li>
-              <li>
-                <span class="install-badge">04</span>
-                <span data-i18n="dmgStep4" data-html="true">
-                  授权：首次启动后，请按 macOS 引导授予<strong>「辅助功能」(Accessibility)</strong> 权限，以支持实时光标定位与选区原地掉包。
-                </span>
-              </li>
-            </ul>
-
-            <div style="text-align: center;">
+            <div class="install-cta-side">
               <a
                 class="btn btn-primary"
                 href="https://github.com/linrol/swapr-trans/releases/download/v1.0.0/SwaprTrans-1.0.0.dmg"
               >
-                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <path
-                    fill="none"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14"
-                  />
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 3v12m0 0-4-4m4 4 4-4M5 21h14" />
                 </svg>
-                <span data-i18n="btnDownloadDmg">立即下载 SwaprTrans-1.0.0.dmg (1.9MB)</span>
+                <span data-i18n="btnDownloadBox">下载 SwaprTrans-1.0.0.dmg (1.9MB)</span>
               </a>
-            </div>
-          </div>
 
-          <!-- Source Panel -->
-          <div id="tab-source" class="install-panel">
-            <p data-i18n="srcHint" style="margin-top: 0; color: var(--text-muted);">
-              克隆仓库后，在终端执行一键安装脚本即可就地编译并安装到 /Applications：
-            </p>
-            <div class="code-snippet" style="font-size: 0.95rem; padding: 16px;">
-git clone https://github.com/linrol/swapr-trans.git<br />
-cd swapr-trans<br />
-./scripts/install.sh
+              <div class="code-pill">
+                $ git clone https://github.com/linrol/swapr-trans &amp;&amp; ./scripts/install.sh
+              </div>
             </div>
           </div>
         </div>
       </section>
     </main>
 
-    <!-- Footer -->
+    <!-- Minimalist Footer -->
     <footer class="site-footer">
       <div class="container footer-inner">
-        <div>
-          <strong style="color: #fff;">SwaprTrans</strong>
-          <p style="margin: 4px 0 0; font-size: 0.8rem;" data-i18n="footerCopy">
-            SwaprTrans · 专为 macOS 设计的全局划词翻译与原位掉包工具。
-          </p>
-        </div>
+        <span data-i18n="footerText">SwaprTrans · 专为 macOS 打造的极简原生选词瞬译与原地覆写工具</span>
         <div class="footer-links">
           <a href="https://github.com/linrol/swapr-trans" target="_blank" rel="noopener noreferrer">GitHub</a>
           <a href="https://github.com/linrol/swapr-trans/releases" target="_blank" rel="noopener noreferrer">Releases</a>
-          <span data-i18n="footerLicense">基于 MIT 开源协议</span>
+          <span>MIT License</span>
         </div>
       </div>
     </footer>

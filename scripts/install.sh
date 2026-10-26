@@ -9,9 +9,22 @@ echo "  📦 Building & Installing SwaprTrans ... "
 echo "=========================================="
 
 # 1. Fast incremental build for host architecture
-swift build -c release
-
-BIN_PATH="$REPO_ROOT/.build/release/SwaprTrans"
+VERSION="${1:-1.0.0}"
+VERSION="${VERSION#v}"
+BUILD_NUMBER="1"
+# 本机工具链为 Swift 5.7 / macOS 12 SDK（无 SwiftPM PackageDescription 模块）时，
+# 走 scripts/build-local.sh 的 swiftc 直接编译路径；否则仍用 swift build
+if swift build -c release 2>/dev/null; then
+    BIN_PATH="$REPO_ROOT/.build/release/SwaprTrans"
+else
+    echo "--> swift build unavailable, falling back to scripts/build-local.sh (direct swiftc)"
+    "$REPO_ROOT/scripts/build-local.sh" "$VERSION" "$BUILD_NUMBER"
+    BIN_PATH="$REPO_ROOT/.build/direct/SwaprTrans.app/Contents/MacOS/SwaprTrans"
+fi
+if [ ! -x "$BIN_PATH" ]; then
+    echo "❌ Build failed: no binary at $BIN_PATH" >&2
+    exit 1
+fi
 APP_DEST="/Applications/SwaprTrans.app"
 CONTENTS_DIR="$APP_DEST/Contents"
 MACOS_DIR="$CONTENTS_DIR/MacOS"
@@ -31,10 +44,6 @@ chmod +x "$MACOS_DIR/SwaprTrans"
 if [ -f "$REPO_ROOT/assets/AppIcon.icns" ]; then
     cp -f "$REPO_ROOT/assets/AppIcon.icns" "$RESOURCES_DIR/AppIcon.icns"
 fi
-
-VERSION="${1:-1.0.0}"
-VERSION="${VERSION#v}"
-BUILD_NUMBER="1"
 
 GIT_COMMIT=$(git rev-parse --short HEAD 2>/dev/null || echo "dev")
 GIT_DATE=$(git log -1 --format="%cd" --date=short 2>/dev/null || echo "")
@@ -65,7 +74,7 @@ cat <<INFOEOF > "$CONTENTS_DIR/Info.plist"
     <key>GitCommitDate</key>
     <string>${GIT_DATE}</string>
     <key>LSMinimumSystemVersion</key>
-    <string>14.2</string>
+    <string>12.0</string>
     <key>LSUIElement</key>
     <true/>
     <key>NSHighResolutionCapable</key>

@@ -1,5 +1,6 @@
 import SwiftUI
 import AppKit
+import Combine
 import SwaprTransKit
 
 struct StandaloneMenuBarPopup: View {
@@ -91,5 +92,98 @@ struct StandaloneMenuBarPopup: View {
         .onAppear {
             config.checkPermission()
         }
+    }
+}
+
+/// Menu bar status item + popover, replacing MenuBarExtra (macOS 13+) so the app runs on macOS 12
+@MainActor
+final class StatusItemController: NSObject, NSPopoverDelegate {
+    private var statusItem: NSStatusItem!
+    private let popover = NSPopover()
+    /// Invisible anchor window: required for popover positioning when the status button has no own window
+    private var anchorWindow: NSWindow?
+    private var cancellables: [Cancellable] = []
+    private var eventMonitor: Any?
+
+    override init() {
+        super.init()
+
+        statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
+        statusItem.button?.image = StatusItemController.makeIcon()
+        statusItem.button?.image?.isTemplate = true
+        statusItem.button?.target = self
+        statusItem.button?.action = #selector(togglePopover)
+
+        popover.contentSize = NSSize(width: 320, height: 360)
+        popover.behavior = .transient
+        popover.delegate = self
+        popover.contentViewController = NSHostingController(rootView: StandaloneMenuBarPopup())
+
+        // Reflect Active/Idle state on the menu bar icon
+        let config = SwaprTransConfig.shared
+        cancellables = [
+            config.$isEnabled.sink { [weak self] _ in self?.refreshIcon() },
+            config.$hasAccessibilityPermission.sink { [weak self] _ in self?.refreshIcon() }
+        ]
+    }
+
+    private func refreshIcon() {
+        statusItem.button?.image = StatusItemController.makeIcon()
+        statusItem.button?.image?.isTemplate = true
+    }
+
+    private static func makeIcon() -> NSImage? {
+        if #available(macOS 11.0, *) {
+            return NSImage(systemSymbolName: "translate", accessibilityDescription: "SwaprTrans")
+        }
+        return nil
+    }
+
+    @objc private func togglePopover() {
+        if popover.isShown {
+            closePopover()
+            return
+        }
+        guard let button = statusItem.button else { return }
+
+        // Align an invisible borderless window with the status button so the
+        // popover has a valid positioning window in accessory (no-Dock) apps
+        if let buttonFrame = button.window?.convertToScreen(button.convert(button.bounds, to: nil)) {
+            let win = anchorWindow ?? NSWindow(
+                contentRect: .zero,
+                styleMask: [.borderless],
+                backing: .buffered,
+                defer: false
+            )
+            win.contentView = NSView(frame: .zero)
+            win.alphaValue = 0
+            win.ignoresMouseEvents = true
+            win.isExcludedFromWindowsMenu = true
+            win.setFrame(NSRect(origin: buttonFrame.origin, size: NSSize(width: 1, height: buttonFrame.height)), display: false)
+            win.orderFrontRegardless()
+            anchorWindow = win
+            popover.show(relativeTo: win.contentView!.bounds, of: win.contentView!, preferredEdge: .minY)
+        } else {
+            popover.show(relativeTo: button.bounds, of: button, preferredEdge: .minY)
+        }
+
+        // Keep popover clickable while the app stays in the background
+        eventMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.leftMouseDown, .rightMouseDown]) { [weak self] _ in
+            self?.closePopover()
+        }
+        popover.contentViewController?.view.window?.makeKey()
+    }
+
+    private func closePopover() {
+        popover.performClose(nil)
+        if let monitor = eventMonitor {
+            NSEvent.removeMonitor(monitor)
+            eventMonitor = nil
+        }
+        anchorWindow?.orderOut(nil)
+    }
+
+    func popoverDidClose(_ notification: Notification) {
+        closePopover()
     }
 }

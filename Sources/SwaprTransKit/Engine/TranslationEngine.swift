@@ -1,6 +1,8 @@
 import Foundation
 import AppKit
+#if canImport(Translation)
 import Translation
+#endif
 
 public enum AppleModelStatus: Equatable {
     case installed
@@ -11,6 +13,7 @@ public enum AppleModelStatus: Equatable {
 @MainActor
 public final class AppleTranslationChecker {
     public static func checkStatus() async -> AppleModelStatus {
+        #if canImport(Translation)
         if #available(macOS 15.0, *) {
             let availability = LanguageAvailability()
             let zhToEn = await availability.status(from: Locale.Language(identifier: "zh-Hans"), to: Locale.Language(identifier: "en"))
@@ -26,6 +29,9 @@ public final class AppleTranslationChecker {
         } else {
             return .unsupported
         }
+        #else
+        return .unsupported
+        #endif
     }
 }
 

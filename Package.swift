@@ -1,10 +1,10 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 5.7
 import PackageDescription
 
 let package = Package(
     name: "SwaprTrans",
     platforms: [
-        .macOS("14.2")
+        .macOS("12.0")
     ],
     products: [
         .library(
@@ -24,7 +24,6 @@ let package = Package(
                 .linkedFramework("CoreGraphics"),
                 .linkedFramework("AppKit"),
                 .linkedFramework("ApplicationServices"),
-                .linkedFramework("Translation"),
                 .linkedFramework("AVFoundation")
             ]
         ),

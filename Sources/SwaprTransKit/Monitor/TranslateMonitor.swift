@@ -50,16 +50,11 @@ public final class TranslateMonitor: @unchecked Sendable {
         self.isRightClickMode = (self.targetKeyCode == -2 || self.targetMods.contains("right_double") || self.targetMods.contains("double"))
         self.isSingleKeyMode = !self.isRightClickMode && !self.requireCmd && !self.requireAlt && !self.requireCtrl && !self.requireShift
         
-        if Thread.isMainThread {
-            MainActor.assumeIsolated {
-                self.cachedIgnoredBundleIds = SwaprTransConfig.shared.ignoredAppBundleIdentifiers
-                self.cachedIgnoredKeywords = SwaprTransConfig.shared.ignoredAppNameKeywords
-            }
-        } else {
-            Task { @MainActor in
-                self.cachedIgnoredBundleIds = SwaprTransConfig.shared.ignoredAppBundleIdentifiers
-                self.cachedIgnoredKeywords = SwaprTransConfig.shared.ignoredAppNameKeywords
-            }
+        // Read MainActor-isolated config asynchronously (assumeIsolated requires macOS 14+; the event
+        // callback dispatches async to main anyway, so a few-runloop slack is safe here)
+        Task { @MainActor in
+            self.cachedIgnoredBundleIds = SwaprTransConfig.shared.ignoredAppBundleIdentifiers
+            self.cachedIgnoredKeywords = SwaprTransConfig.shared.ignoredAppNameKeywords
         }
     }
 
@@ -69,10 +64,6 @@ public final class TranslateMonitor: @unchecked Sendable {
         // Sync shortcut configuration without triggering deadlocks
         if let sc = shortcut {
             self.syncShortcutConfig(with: sc)
-        } else if Thread.isMainThread {
-            MainActor.assumeIsolated {
-                self.syncShortcutConfig(with: SwaprTransConfig.shared.shortcut)
-            }
         } else {
             Task { @MainActor in
                 self.syncShortcutConfig(with: SwaprTransConfig.shared.shortcut)
@@ -217,7 +208,9 @@ public final class TranslateMonitor: @unchecked Sendable {
             },
             userInfo: nil
         ) else {
-            print("Failed to create translate event tap")
+            Task { @MainActor in
+                SwaprTransConfig.shared.log("Failed to create translate event tap (Accessibility permission missing?)", level: .error)
+            }
             return
         }
 

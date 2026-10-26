@@ -1,6 +1,8 @@
 import SwiftUI
 import AppKit
+#if canImport(Translation)
 import Translation
+#endif
 import AVFoundation
 
 public struct TranslationHudData: Identifiable {
@@ -665,6 +667,7 @@ public struct TranslationHudView: View {
 }
 
 // MARK: - Apple Native Translation (macOS 15.0+ Sequoia)
+#if canImport(Translation)
 @available(macOS 15.0, *)
 struct AppleTranslationModifier: ViewModifier {
     @ObservedObject var config = SwaprTransConfig.shared
@@ -742,14 +745,19 @@ struct AppleTranslationModifier: ViewModifier {
         }
     }
 }
+#endif
 
 extension View {
     @ViewBuilder
     func applyAppleTranslation(model: TranslationHudModel) -> some View {
+        #if canImport(Translation)
         if #available(macOS 15.0, *) {
             self.modifier(AppleTranslationModifier(model: model))
         } else {
             self
         }
+        #else
+        self
+        #endif
     }
 }

@@ -102,8 +102,11 @@ elif security find-identity -v -p codesigning | grep -q "Apple Development"; the
     echo "Found signing identity: $IDENTITY"
     codesign --force --deep -r="$DR_REQ" --sign "$IDENTITY" "$APP_DEST"
 else
-    echo "Using ad-hoc signature (-s -)..."
-    codesign --force --deep --sign - "$APP_DEST"
+    echo "Using ad-hoc signature with stable designated requirement (survives re-rebuilds)..."
+    # IMPORTANT: -r= pins TCC identity to bundle-id instead of CDHash.
+    # Without it, every rebuild invalidates the Accessibility permission.
+    codesign --force --deep --sign - "$APP_DEST" || true
+    codesign --force --deep -r="$DR_REQ" --sign - "$APP_DEST"
 fi
 
 xattr -cr "$APP_DEST"

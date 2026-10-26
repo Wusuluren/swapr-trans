@@ -109,7 +109,11 @@ cat <<INFOEOF > "$CONTENTS/Info.plist"
 INFOEOF
 
 xattr -cr "$APP"
-codesign --force --deep --sign - "$APP" 2>/dev/null || true
+# Pin the designated requirement to the bundle identifier so TCC Accessibility
+# trust survives binary rebuilds (ad-hoc signing alone would rotate CDHash and
+# silently invalidate the permission on every install).
+DR_REQ='designated => identifier "com.linrol.SwaprTrans"'
+codesign --force --deep -r="$DR_REQ" --sign - "$APP" 2>/dev/null || true
 xattr -cr "$APP"
 
 echo "✅ Successfully built: $APP"

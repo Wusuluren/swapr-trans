@@ -113,12 +113,9 @@ public final class SwaprTransConfig: ObservableObject {
             if self.isEnabled && self.hasAccessibilityPermission {
                 TranslateMonitor.shared.startMonitoring(with: self.shortcut)
                 self.log("SwaprTrans service activated (Shortcut: \(self.shortcut.label))", level: .info)
-            } else {
-                self.log("Not monitoring: isEnabled=\(self.isEnabled), accessibility=\(self.hasAccessibilityPermission)", level: .warning)
-                if self.isEnabled && !self.hasAccessibilityPermission {
-                    // Prompt the user to grant Accessibility on launch instead of silently doing nothing
-                    self.requestPermission()
-                }
+            } else if self.isEnabled && !self.hasAccessibilityPermission {
+                // Prompt the user to grant Accessibility on launch instead of silently doing nothing
+                self.requestPermission()
             }
 
             // Check if Apple Native Translation model is installed
@@ -136,7 +133,6 @@ public final class SwaprTransConfig: ObservableObject {
 
     public func log(_ message: String, level: SwaprLogLevel = .info) {
         logHandler?(message, level)
-        FileHandle.standardError.write("[SwaprTrans][\(level.rawValue)] \(message)\n".data(using: .utf8)!)
     }
 
     @discardableResult

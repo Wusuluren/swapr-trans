@@ -3,6 +3,14 @@ import AppKit
 import Combine
 import SwaprTransKit
 
+/// "translate" requires SF Symbols 4 (macOS 14+); use "textformat.abc" on older systems
+enum AppIconSymbol {
+    static var name: String {
+        if #available(macOS 14.0, *) { return "translate" }
+        return "textformat.abc"
+    }
+}
+
 struct StandaloneMenuBarPopup: View {
     @ObservedObject var config = SwaprTransConfig.shared
 
@@ -11,7 +19,7 @@ struct StandaloneMenuBarPopup: View {
             // Header
             HStack {
                 HStack(spacing: 6) {
-                    Image(systemName: "translate")
+                    Image(systemName: AppIconSymbol.name)
                         .foregroundColor(.accentColor)
                         .font(.system(size: 14, weight: .bold))
                     Text("SwaprTrans")
@@ -109,8 +117,12 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
         super.init()
 
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        statusItem.button?.image = StatusItemController.makeIcon()
-        statusItem.button?.image?.isTemplate = true
+        if let img = StatusItemController.makeIcon() {
+            statusItem.button?.image = img
+            statusItem.button?.image?.isTemplate = true
+        } else {
+            statusItem.button?.title = "文A" // last-resort text icon so the item is never invisible
+        }
         statusItem.button?.target = self
         statusItem.button?.action = #selector(togglePopover)
 
@@ -128,13 +140,21 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
     }
 
     private func refreshIcon() {
-        statusItem.button?.image = StatusItemController.makeIcon()
-        statusItem.button?.image?.isTemplate = true
+        if let img = StatusItemController.makeIcon() {
+            statusItem.button?.image = img
+            statusItem.button?.image?.isTemplate = true
+            statusItem.button?.title = ""
+        }
     }
 
     private static func makeIcon() -> NSImage? {
         if #available(macOS 11.0, *) {
-            return NSImage(systemSymbolName: "translate", accessibilityDescription: "SwaprTrans")
+            // "translate" only exists in SF Symbols 4+ (macOS 14); fall back progressively
+            for name in ["translate", "textformat.abc", "globe"] {
+                if let img = NSImage(systemSymbolName: name, accessibilityDescription: "SwaprTrans") {
+                    return img
+                }
+            }
         }
         return nil
     }

@@ -208,9 +208,7 @@ public final class TranslateMonitor: @unchecked Sendable {
             },
             userInfo: nil
         ) else {
-            Task { @MainActor in
-                SwaprTransConfig.shared.log("Failed to create translate event tap (Accessibility permission missing?)", level: .error)
-            }
+            print("Failed to create translate event tap (Accessibility permission missing?)")
             return
         }
 
@@ -417,25 +415,37 @@ public final class TranslateMonitor: @unchecked Sendable {
             }
 
             // 4. Fallback: only simulate Cmd+C when AX could not determine selection (e.g. non-standard views)
+            // Latency budget for bare-key triggers (typing must stay fluid):
+            //  - Nothing claims the copy within ~80ms -> user is just typing, return the key ASAP.
+            //  - Copy claimed but Electron-style views commit the string late -> keep waiting up to
+            //    250ms after the claim for a non-empty string before giving up.
             let oldChangeCount = NSPasteboard.general.changeCount
             self?.simulateCmdC()
 
             let start = Date()
-            var detectedNewText = false
-            while Date().timeIntervalSince(start) < 0.10 {
+            var copiedText: String? = nil
+            var firstClaim: Date? = nil
+            while true {
+                let now = Date()
                 if NSPasteboard.general.changeCount != oldChangeCount {
-                    detectedNewText = true
-                    break
+                    if firstClaim == nil { firstClaim = now }
+                    if let rawStr = NSPasteboard.general.string(forType: .string) {
+                        let trimmed = rawStr.trimmingCharacters(in: .whitespacesAndNewlines)
+                        if !trimmed.isEmpty {
+                            copiedText = trimmed
+                            break
+                        }
+                    }
+                    if let claimed = firstClaim, now.timeIntervalSince(claimed) > 0.25 { break }
+                } else if now.timeIntervalSince(start) > 0.08 {
+                    break // no copy claim: plain keystroke, replay the key immediately
                 }
-                usleep(10_000)
+                usleep(6_000)
             }
 
-            if detectedNewText, let rawStr = NSPasteboard.general.string(forType: .string) {
-                let trimmed = rawStr.trimmingCharacters(in: .whitespacesAndNewlines)
-                if !trimmed.isEmpty {
-                    self?.triggerDirectTranslation(text: trimmed, frontPid: frontPid)
-                    return
-                }
+            if let trimmed = copiedText {
+                self?.triggerDirectTranslation(text: trimmed, frontPid: frontPid)
+                return
             }
 
             // If no text selected, replay native key to avoid dropping key press
@@ -460,11 +470,11 @@ public final class TranslateMonitor: @unchecked Sendable {
         modUp?.flags = []
 
         modDown?.post(tap: .cghidEventTap)
-        usleep(10_000)
+        usleep(5_000)
         cDown?.post(tap: .cghidEventTap)
-        usleep(15_000)
+        usleep(8_000)
         cUp?.post(tap: .cghidEventTap)
-        usleep(10_000)
+        usleep(5_000)
         modUp?.post(tap: .cghidEventTap)
     }
 

@@ -50,6 +50,24 @@ public struct SwaprTransSettingsView: View {
                     .controlSize(.mini)
                 }
 
+                // Input-panel hotkey (modifier combos only)
+                HStack {
+                    Text("Input Hotkey:")
+                        .font(.system(size: 11))
+                        .foregroundColor(.secondary)
+
+                    Spacer()
+
+                    Picker("", selection: $config.inputShortcut) {
+                        ForEach(TranslationShortcut.presets.filter { $0.modifiers != "none" && $0.modifiers != "right_double" }) { sc in
+                            Text(sc.label).tag(sc)
+                        }
+                    }
+                    .pickerStyle(.menu)
+                    .labelsHidden()
+                    .controlSize(.mini)
+                }
+
                 // Provider selection
                 HStack {
                     Text("Provider:")
@@ -189,7 +207,7 @@ public struct SwaprTransSettingsView: View {
             }
             .padding(.top, 2)
 
-            Text("Select text in any app, then press \(config.shortcut.label) to translate and replace/copy")
+            Text("Select text in any app, then press \(config.shortcut.label) to translate and replace/copy. Press \(config.inputShortcut.label) to type text for translation manually.")
                 .font(.system(size: 10))
                 .foregroundColor(.secondary)
                 .lineLimit(2)

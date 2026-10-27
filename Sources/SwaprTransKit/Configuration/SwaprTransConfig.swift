@@ -18,6 +18,7 @@ public final class SwaprTransConfig: ObservableObject {
     private let keyEnabled = "swapr_trans_enabled"
     private let keyProvider = "swapr_trans_provider"
     private let keyShortcut = "swapr_trans_shortcut"
+    private let keyInputShortcut = "swapr_trans_input_shortcut"
     private let keyDismissSeconds = "swapr_trans_dismiss_seconds"
     private let keyHudOpacity = "swapr_trans_hud_opacity"
 
@@ -49,6 +50,18 @@ public final class SwaprTransConfig: ObservableObject {
                 TranslateMonitor.shared.restartMonitoring(with: shortcut)
             }
             log("Translation shortcut updated to: \(shortcut.label)", level: .info)
+        }
+    }
+
+    /// Hotkey that opens the manual text-input translation panel (always requires modifiers)
+    @Published public var inputShortcut: TranslationShortcut = .defaultInputShortcut {
+        didSet {
+            guard isInitialized else { return }
+            if let data = try? JSONEncoder().encode(inputShortcut) {
+                defaults.set(data, forKey: keyInputShortcut)
+            }
+            TranslateMonitor.shared.syncInputShortcut(keyCode: inputShortcut.keyCode, modifiers: inputShortcut.modifiers)
+            log("Input panel shortcut updated to: \(inputShortcut.label)", level: .info)
         }
     }
 
@@ -92,6 +105,17 @@ public final class SwaprTransConfig: ObservableObject {
                 self.shortcut = matched
             } else {
                 self.shortcut = sc
+            }
+        }
+
+        if let inputData = defaults.data(forKey: keyInputShortcut),
+           let isc = try? JSONDecoder().decode(TranslationShortcut.self, from: inputData),
+           isc.modifiers != "none" && isc.modifiers != "right_double" {
+            // Only accept modifier-carrying combos: a bare key would collide with typing
+            if let matched = TranslationShortcut.presets.first(where: { $0.keyCode == isc.keyCode && $0.modifiers == isc.modifiers }) {
+                self.inputShortcut = matched
+            } else {
+                self.inputShortcut = isc
             }
         }
 

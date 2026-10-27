@@ -14,6 +14,9 @@ public struct TranslationShortcut: Codable, Equatable, Hashable, Identifiable {
 
     public static let defaultShortcut = TranslationShortcut(label: "Space", keyCode: 49, modifiers: "none")
 
+    /// Hotkey that opens the manual text-input translation panel; must carry explicit modifiers
+    public static let defaultInputShortcut = TranslationShortcut(label: "⌘ ⌥ T (Cmd + Option + T)", keyCode: 17, modifiers: "cmd+alt")
+
     public static let presets: [TranslationShortcut] = [
         TranslationShortcut(label: "Space", keyCode: 49, modifiers: "none"),
         TranslationShortcut(label: "Down Arrow ↓", keyCode: 125, modifiers: "none"),
@@ -23,6 +26,7 @@ public struct TranslationShortcut: Codable, Equatable, Hashable, Identifiable {
         TranslationShortcut(label: "⌥ Space (Option + Space)", keyCode: 49, modifiers: "alt"),
         TranslationShortcut(label: "⌃ Space (Control + Space)", keyCode: 49, modifiers: "ctrl"),
         TranslationShortcut(label: "⌘ ⌥ D (Cmd + Option + D)", keyCode: 2, modifiers: "cmd+alt"),
+        TranslationShortcut(label: "⌘ ⌥ T (Cmd + Option + T)", keyCode: 17, modifiers: "cmd+alt"),
         TranslationShortcut(label: "F1", keyCode: 122, modifiers: "none"),
         TranslationShortcut(label: "F2", keyCode: 120, modifiers: "none"),
         TranslationShortcut(label: "F4", keyCode: 118, modifiers: "none"),

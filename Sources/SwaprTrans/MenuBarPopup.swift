@@ -87,6 +87,15 @@ struct StandaloneMenuBarPopup: View {
 
                 Spacer()
 
+                Button("输入翻译") {
+                    NotificationCenter.default.post(name: .swaprOpenInputPanel, object: nil)
+                }
+                .buttonStyle(.plain)
+                .font(.system(size: 11))
+                .foregroundColor(.secondary)
+
+                Spacer()
+
                 Button("Quit") {
                     NSApp.terminate(nil)
                 }
@@ -101,6 +110,11 @@ struct StandaloneMenuBarPopup: View {
             config.checkPermission()
         }
     }
+}
+
+/// Posted by the popup footer so StatusItemController can close the popover before opening the panel
+extension Notification.Name {
+    static let swaprOpenInputPanel = Notification.Name("SwaprOpenInputPanel")
 }
 
 /// Menu bar status item + popover, replacing MenuBarExtra (macOS 13+) so the app runs on macOS 12
@@ -137,6 +151,13 @@ final class StatusItemController: NSObject, NSPopoverDelegate {
             config.$isEnabled.sink { [weak self] _ in self?.refreshIcon() },
             config.$hasAccessibilityPermission.sink { [weak self] _ in self?.refreshIcon() }
         ]
+
+        NotificationCenter.default.addObserver(forName: .swaprOpenInputPanel, object: nil, queue: .main) { _ in
+            Task { @MainActor in
+                self.closePopover()
+                TranslationInputPanelController.shared.toggle(frontPid: 0)
+            }
+        }
     }
 
     private func refreshIcon() {

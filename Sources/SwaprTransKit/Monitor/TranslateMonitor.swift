@@ -5,6 +5,8 @@ import CoreGraphics
 public final class TranslateMonitor: @unchecked Sendable {
     public static let shared = TranslateMonitor()
     public static var isHudVisible: Bool = false
+    /// While the manual input panel owns keyboard focus, all key interception is bypassed
+    public static var isInputPanelActive: Bool = false
     public static var cachedHudFrame: NSRect = .zero
     public static var hudShownDate: Date = .distantPast
 
@@ -28,6 +30,14 @@ public final class TranslateMonitor: @unchecked Sendable {
     private var isSingleKeyMode: Bool = true
     public var isDetecting: Bool = false
     private var currentTranslationTask: Task<Void, Never>?
+
+    // Input-panel hotkey cache (must carry explicit modifiers)
+    private var inputKeyCode: Int64 = 17
+    private var inputRequireCmd: Bool = true
+    private var inputRequireAlt: Bool = true
+    private var inputRequireCtrl: Bool = false
+    private var inputRequireShift: Bool = false
+    private var inputHotkeyEnabled: Bool = true
 
     // Cached app filter settings (safe for C callback access)
     private var cachedIgnoredBundleIds: Set<String> = []
@@ -55,7 +65,24 @@ public final class TranslateMonitor: @unchecked Sendable {
         Task { @MainActor in
             self.cachedIgnoredBundleIds = SwaprTransConfig.shared.ignoredAppBundleIdentifiers
             self.cachedIgnoredKeywords = SwaprTransConfig.shared.ignoredAppNameKeywords
+            let isc = SwaprTransConfig.shared.inputShortcut
+            self.syncInputShortcut(keyCode: isc.keyCode, modifiers: isc.modifiers)
         }
+    }
+
+    public func syncInputShortcut(keyCode: Int64, modifiers: String) {
+        let mods = modifiers.lowercased()
+        // A bare key cannot be an input hotkey: it would collide with the very text the panel types
+        if keyCode < 0 || mods == "none" || mods.contains("double") {
+            inputHotkeyEnabled = false
+            return
+        }
+        inputHotkeyEnabled = true
+        inputKeyCode = keyCode
+        inputRequireCmd = mods.contains("cmd")
+        inputRequireAlt = mods.contains("alt") || mods.contains("opt")
+        inputRequireCtrl = mods.contains("ctrl")
+        inputRequireShift = mods.contains("shift")
     }
 
     public func startMonitoring(with shortcut: TranslationShortcut? = nil) {
@@ -141,6 +168,28 @@ public final class TranslateMonitor: @unchecked Sendable {
                     }
 
                     let keyCode = event.getIntegerValueField(.keyboardEventKeycode)
+
+                    // Manual input panel owns the keyboard: type everything through untouched
+                    if TranslateMonitor.isInputPanelActive {
+                        return Unmanaged.passUnretained(event)
+                    }
+
+                    // Input-panel hotkey: exact modifier combo, checked before the target trigger
+                    if TranslateMonitor.shared.inputHotkeyEnabled,
+                       keyCode == TranslateMonitor.shared.inputKeyCode {
+                        let flags = event.flags
+                        let m = TranslateMonitor.shared
+                        if flags.contains(.maskCommand) == m.inputRequireCmd
+                            && flags.contains(.maskAlternate) == m.inputRequireAlt
+                            && flags.contains(.maskControl) == m.inputRequireCtrl
+                            && flags.contains(.maskShift) == m.inputRequireShift {
+                            let frontPid = NSWorkspace.shared.frontmostApplication?.processIdentifier ?? 0
+                            DispatchQueue.main.async {
+                                TranslationInputPanelController.shared.toggle(frontPid: frontPid)
+                            }
+                            return nil // consume the hotkey
+                        }
+                    }
 
                     // Esc key dismisses HUD
                     if TranslateMonitor.isHudVisible && keyCode == 53 {

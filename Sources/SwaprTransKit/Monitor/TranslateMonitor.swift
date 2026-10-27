@@ -419,11 +419,14 @@ public final class TranslateMonitor: @unchecked Sendable {
             //  - Nothing claims the copy within ~80ms -> user is just typing, return the key ASAP.
             //  - Copy claimed but Electron-style views commit the string late -> keep waiting up to
             //    250ms after the claim for a non-empty string before giving up.
+            // Capture the text clipboard before Cmd+C so an IDE phantom line-copy can be undone below.
+            let preCopyString = NSPasteboard.general.string(forType: .string)
             let oldChangeCount = NSPasteboard.general.changeCount
             self?.simulateCmdC()
 
             let start = Date()
             var copiedText: String? = nil
+            var copiedRaw: String? = nil
             var firstClaim: Date? = nil
             while true {
                 let now = Date()
@@ -433,6 +436,7 @@ public final class TranslateMonitor: @unchecked Sendable {
                         let trimmed = rawStr.trimmingCharacters(in: .whitespacesAndNewlines)
                         if !trimmed.isEmpty {
                             copiedText = trimmed
+                            copiedRaw = rawStr
                             break
                         }
                     }
@@ -441,6 +445,26 @@ public final class TranslateMonitor: @unchecked Sendable {
                     break // no copy claim: plain keystroke, replay the key immediately
                 }
                 usleep(6_000)
+            }
+
+            // IDE guard: VS Code-family editors (incl. Qoder) copy the whole current line *with a
+            // trailing newline* when nothing is selected, which would masquerade as a real selection
+            // on every typed space. Signature = exactly one line ending in \n. Only vetoed in bare-key
+            // mode: with a deliberate modifier shortcut, translating the current line is a feature.
+            let bareKeyTrigger = self?.isSingleKeyMode ?? true
+            if bareKeyTrigger,
+               let raw = copiedRaw,
+               raw.hasSuffix("\n"),
+               !raw.dropLast().contains("\n") {
+                if let old = preCopyString, old != raw {
+                    // Best-effort: give the user's previous text clipboard back
+                    NSPasteboard.general.clearContents()
+                    NSPasteboard.general.setString(old, forType: .string)
+                }
+                if shouldReplay {
+                    self?.replayTargetKey()
+                }
+                return
             }
 
             if let trimmed = copiedText {
